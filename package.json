@@ -1,0 +1,31 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "This application is used to manage a company's employees.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LHafoka13/Employee-Tracker.git"
+  },
+  "keywords": [
+    "Employee",
+    "Tracker",
+    "sql",
+    "inquirer",
+    "console.table"
+  ],
+  "author": "Lily'okalani Hafoka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LHafoka13/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/LHafoka13/Employee-Tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
+  }
+}
