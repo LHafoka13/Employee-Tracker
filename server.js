@@ -219,13 +219,73 @@ const addRole = () => {
     )}
 )}
 
+//this function allows end users to choose which table they want to view
 const view = () => {
- 
-    
+    inquirer
+      .prompt(
+          {
+          name: 'view',
+          type: 'list',
+          message: 'Choose which table to view',
+          choices: [
+              'Department',
+              'Role',
+              'Employee'
+          ],
+      }
+      
+    ).then((answer) => {
+        switch(answer.view) {
+            case 'Department':
+                viewDepartment();
+                break;
+            case 'Role':
+                viewRole();
+                break;
+            case 'Employee':
+                viewEmployee();
+                break;
+        }
+    })
 }
 
+//this function returns the department table
+const viewDepartment = () => {
+   connection.query('SELECT * FROM department', (err, res) => {
+       if (err) throw err;
+       console.table(res);
+       menu();
+   })
+}
+
+//this function returns the role table
+const viewRole = () => {
+    connection.query('SELECT * FROM role', (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        menu();
+    })
+}
+
+//this function returns the employees table
+const viewEmployee = () => {
+  const sql =
+    "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.name as department, role.salary" +
+    " FROM employee" +
+    " inner join role ON (employee.role_id = role.id)" +
+    " inner join department on role.department_id = department.id";
+
+  connection.query(sql, [], function (err, res) {
+    if (err) throw err;
+
+    console.table(res);
+    menu();
+  })
+};
+
+
 const update = () => {
-    
+
 }
 
 
