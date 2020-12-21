@@ -12,7 +12,7 @@ const connection = mysql.createConnection({
     database: 'employee_DB',
 });
 
-
+//function that kicks off the application
 const menu = () => {
   inquirer
     .prompt({
@@ -44,6 +44,7 @@ const menu = () => {
     });
 };
 
+//this function allows End Users to decide which they would like to add
 const add = () => {
    inquirer
      .prompt({
@@ -71,69 +72,154 @@ const add = () => {
      });
 };
 
+//this funciton will add a department
 const addDepartment = () => {
     inquirer
-      .prompt([
-          {
-            name: 'id',
-            type: 'input',
-            message: 'Enter an ID number',
-         },
+      .prompt(
          {
              name: 'name',
              type: 'input',
              message: 'Enter a department name',
          },
-    ])
+    )
     .then((input) => {
-        let query = `INSERT INTO department(id, name) VALUES(${input.id}, '${input.name}')`;
+        let query = `INSERT INTO department(name) VALUES('${input.name}')`;
         connection.query(query, (err, res) => {
             if (err) throw err;
             
-            console.log('Department Added!');
+            console.log(`${input.name} added to Departments!`);
             menu();
         });
     });
-    
 };
 
+//this function will add an employee
 const addEmployee = () => {
     inquirer
       .prompt([
-          {
-            name: 'id',
-            type: 'input',
-            message: 'Enter an ID number',
-         },
          {
              name: 'firstname',
              type: 'input',
-             message: 'Enter the first name',
+             message: 'What is the employee\'s first name?',
          },
          {
              name: 'lastname',
              type: 'input',
-             message: 'Enter the last name',
+             message: 'What is the employee\'s last name?',
          },
          {
-             name: 'roleid',
-             type: 'input',
-             message: 'Enter the role id'
+             name: 'role_id',
+             type: 'list',
+             message: 'What is the employee\'s role?',
+             choices: [
+                 'Housekeeper',
+                 'Security Officer',
+                 'Front Office Agent',
+            ],
+         },
+         {
+             name: 'manager_id',
+             type: 'list',
+             message: 'Who is the employee\'s manager?',
+             choices: [
+                 'Housekeeping Manager',
+                 'Director of Security',
+                 'Front Office Manager',
+             ],
          }
     ])
     .then((input) => {
-        let query = `INSERT INTO department(id, name) VALUES(${input.id}, '${input.name}')`;
-        connection.query(query, (err, res) => {
+        if (input.role_id === 'Housekeeper') {
+            roleId = 1;
+        }
+        if (input.role_id === 'Security Officer') {
+            roleId = 2;
+        }
+        if (input.role_id === 'Front Office Agent') {
+            roleId = 3;
+        }
+
+        if (input.manager_id === 'Housekeeping Manager') {
+            managerId = 3;
+        }
+        
+        if (input.manager_id === 'Director of Security') {
+            managerId = 2;
+        }
+
+        if (input.manager_id === 'Front Office Manager') {
+            managerId = 1;
+        }
+    
+        connection.query('INSERT INTO employee SET ?', {
+            first_name: input.firstname,
+            last_name: input.lastname,
+            role_id: roleId,
+            manager_id: managerId,
+        }, (err) => {
             if (err) throw err;
             
-            console.log('Department Added!');
+            console.table(`${input.firstname} ${input.lastname} added to Employees!`);
             menu();
         });
-    });
-    
-};
+    })
+}
 
- const view = () => {
+//this function will add a role
+const addRole = () => {
+    inquirer
+      .prompt([
+        {
+          name: 'title',
+          type: 'input',
+          message: 'What is the title of this role?', 
+
+        },
+        {
+            name: 'salary',
+            type: 'input',
+            message: 'What is the salary for this role?',
+        },
+        {
+            name: 'department_id',
+            type: 'list',
+            message: 'Which department will this role be in?',
+            choices: [
+                'Front Office',
+                'Security',
+                'Housekeeping',
+            ],
+        },
+    ])
+    .then((input) => {
+
+        if (input.department_id === 'Front Office') {
+            departmentId = 3
+        }
+
+        if (input.department_id === 'Security') {
+            departmentId = 2
+        }
+
+        if (input.department_id === 'Housekeeping') {
+            departmentId = 1
+        }
+
+        connection.query('INSERT INTO role SET ?', {
+            title: input.title,
+            salary: input.salary,
+            department_id: departmentId,
+        }, 
+        (err) => {
+            if (err) throw err;
+
+            console.log(`${input.title} added as a role!`)
+            menu();
+        } 
+    )}
+)}
+
+const view = () => {
  
     
 }
