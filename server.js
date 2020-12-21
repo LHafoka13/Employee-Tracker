@@ -285,7 +285,59 @@ const viewEmployee = () => {
 
 
 const update = () => {
+    let employees = [];
+    let sql = 'SELECT * FROM employee';
+    connection.query(sql, (err, res) => {
+        if (err) throw err;
 
+        res.forEach(( {first_name} ) => {
+            employees.push(first_name);
+        })
+
+         inquirer
+              .prompt([
+             {
+                 name: 'employee',
+                 type: 'list',
+                 message: 'Which employee record do you want to update?',
+                 choices: employees
+              },
+              {
+                  name: 'role',
+                  type: 'list',
+                  message: 'What role should this employee be assigned to?',
+                  choices: [
+                      'Housekeeper',
+                      'Security Office',
+                      'Front Office Agent'
+                  ]
+              }
+            ])
+            .then((input) => {
+                if (input.role === 'Housekeeper') {
+                    roleId = 1
+                }
+
+                if(input.role === 'Security Officer') {
+                    roleId = 2
+                }
+
+                if (input.role === 'Front Office Agent') {
+                    roleId = 3
+                }
+
+                let sql = `UPDATE employee SET role_id = ${roleId} WHERE first_name = '${input.employee}'`
+
+                connection.query(sql, (err, res) => {
+                    if (err) throw err;
+
+                    console.log(`Updated ${input.employee}'s role!`);
+                    viewEmployee();
+                })
+            })
+
+              
+    })
 }
 
 
